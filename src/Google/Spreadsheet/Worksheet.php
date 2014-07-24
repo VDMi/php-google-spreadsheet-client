@@ -184,7 +184,7 @@ class Worksheet
     public function getCellFeedUrl($minRow = null, $maxRow = null, $minCol = null, $maxCol = null)
     {
       $url = Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#cellsfeed');
-      $params = [];
+      $params = array();
       if(isset($minRow)) {
         $params[] = "min-row=$minRow";
       }
