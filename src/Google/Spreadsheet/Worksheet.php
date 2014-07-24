@@ -107,9 +107,9 @@ class Worksheet
      * 
      * @return \Google\Spreadsheet\List\Feed
      */
-    public function getListFeed()
+    public function getListFeed($reverse = false, $sort = 'column:timestamp')
     {
-        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl());
+        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl($reverse));
         return new ListFeed($res);
     }
 
@@ -118,9 +118,9 @@ class Worksheet
      * 
      * @return \Google\Spreadsheet\Cell\Feed
      */
-    public function getCellFeed()
+    public function getCellFeed($minRow = null, $maxRow = null, $minCol = null, $maxCol = null)
     {
-        $res = ServiceRequestFactory::getInstance()->get($this->getCellFeedUrl());
+        $res = ServiceRequestFactory::getInstance()->get($this->getCellFeedUrl($minRow, $maxRow, $minCol, $maxCol));
         return new CellFeed($res);
     }
 
@@ -154,9 +154,22 @@ class Worksheet
      * 
      * @return string
      */
-    public function getListFeedUrl()
+    public function getListFeedUrl($reverse = false, $sort = 'column:timestamp')
     {
-        return Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#listfeed');
+        $url = Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#listfeed');
+        $query = array();
+        if($reverse) {
+          $query[] = "reverse=true";
+        }
+
+        if($sort) {
+          $query[] = "sort=" . $sort;
+        }
+
+        if(count($query)) {
+          $url .= '?' . implode('&', $query);
+        }
+        return $url;
     }
 
     /**
@@ -164,8 +177,25 @@ class Worksheet
      * 
      * @return stirng
      */
-    public function getCellFeedUrl()
+    public function getCellFeedUrl($minRow = null, $maxRow = null, $minCol = null, $maxCol = null)
     {
-        return Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#cellsfeed');
+      $url = Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#cellsfeed');
+      $params = [];
+      if(isset($minRow)) {
+        $params[] = "min-row=$minRow";
+      }
+      if(isset($maxRow)) {
+        $params[] = "max-row=$maxRow";
+      }
+      if(isset($minCol)) {
+        $params[] = "min-col=$minCol";
+      }
+      if(isset($maxCol)) {
+        $params[] = "max-col=$maxCol";
+      }
+      if(!empty($params)) {
+        $url .= '?' . implode("&", $params);
+      }
+      return $url;
     }
 }
