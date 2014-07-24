@@ -109,7 +109,7 @@ class Worksheet
      */
     public function getListFeed($reverse = false, $sort = 'column:timestamp')
     {
-        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl($reverse));
+        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl($reverse, $sort));
         return new ListFeed($res);
     }
 
