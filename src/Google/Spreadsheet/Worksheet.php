@@ -166,7 +166,7 @@ class Worksheet
           $query[] = "sort=" . $sort;
         }
 
-        if($sort) {
+        if($max) {
           $query[] = "max-results=" . $max;
         }
 
