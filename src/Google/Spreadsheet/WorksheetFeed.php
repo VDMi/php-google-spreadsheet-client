@@ -103,7 +103,8 @@ class WorksheetFeed extends ArrayIterator
   public function getByID($id)
     {
       foreach ($this->xml->entry as $entry) {
-        if (substr($entry->id->__toString(), -strlen($id)) === $id) {
+        if (substr($entry->id->__toString(), -strlen($id)) === $id
+        || substr($entry->id->__toString(), -strlen($id . '/edit')) === $id . '/edit') {
           $worksheet = new Worksheet($entry);
           $worksheet->setPostUrl($this->getPostUrl());
           return $worksheet;
