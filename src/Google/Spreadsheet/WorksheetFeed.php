@@ -92,4 +92,23 @@ class WorksheetFeed extends ArrayIterator
         return null;
     }
 
+  /**
+   * Get a worksheet by ID.
+   *
+   * @param $id
+   *   The ID to look for.
+   * @return \Google\Spreadsheet\Worksheet|null
+   *   The worksheet or null when not found.
+   */
+  public function getByID($id)
+    {
+      foreach ($this->xml->entry as $entry) {
+        if (substr($entry->id->__toString(), -strlen($id)) === $id) {
+          $worksheet = new Worksheet($entry);
+          $worksheet->setPostUrl($this->getPostUrl());
+          return $worksheet;
+        }
+      }
+      return null;
+    }
 }
