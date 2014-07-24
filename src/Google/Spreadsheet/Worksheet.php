@@ -30,7 +30,7 @@ class Worksheet
 {
     /**
      * A worksheet xml object
-     * 
+     *
      * @var \SimpleXMLElement
      */
     private $xml;
@@ -41,7 +41,7 @@ class Worksheet
 
     /**
      * Initializes the worksheet object.
-     * 
+     *
      * @param SimpleXMLElement $xml
      */
     public function __construct(SimpleXMLElement $xml)
@@ -51,8 +51,8 @@ class Worksheet
     }
 
     /**
-     * Get the worksheet id. Returns the full url. 
-     * 
+     * Get the worksheet id. Returns the full url.
+     *
      * @return string
      */
     public function getId()
@@ -62,7 +62,7 @@ class Worksheet
 
     /**
      * Get the updated date
-     * 
+     *
      * @return DateTime
      */
     public function getUpdated()
@@ -72,7 +72,7 @@ class Worksheet
 
     /**
      * Get the title of the worksheet
-     * 
+     *
      * @return string
      */
     public function getTitle()
@@ -104,19 +104,19 @@ class Worksheet
 
     /**
      * Get the list feed of this worksheet
-     * 
-     * @return \Google\Spreadsheet\List\Feed
+     *
+     * @return \Google\Spreadsheet\ListFeed
      */
-    public function getListFeed($reverse = false, $sort = 'column:timestamp')
+    public function getListFeed($reverse = false, $sort = 'column:timestamp', $max = null)
     {
-        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl($reverse, $sort));
+        $res = ServiceRequestFactory::getInstance()->get($this->getListFeedUrl($reverse, $sort, $max));
         return new ListFeed($res);
     }
 
     /**
      * Get the cell feed of this worksheet
-     * 
-     * @return \Google\Spreadsheet\Cell\Feed
+     *
+     * @return \Google\Spreadsheet\CellFeed
      */
     public function getCellFeed($minRow = null, $maxRow = null, $minCol = null, $maxCol = null)
     {
@@ -141,7 +141,7 @@ class Worksheet
 
     /**
      * Get the edit url of the worksheet
-     * 
+     *
      * @return string
      */
     public function getEditUrl()
@@ -151,10 +151,10 @@ class Worksheet
 
     /**
      * The url which is used to fetch the data of a worksheet as a list
-     * 
+     *
      * @return string
      */
-    public function getListFeedUrl($reverse = false, $sort = 'column:timestamp')
+    public function getListFeedUrl($reverse = false, $sort = 'column:timestamp', $max = null)
     {
         $url = Util::getLinkHref($this->xml, 'http://schemas.google.com/spreadsheets/2006#listfeed');
         $query = array();
@@ -166,6 +166,10 @@ class Worksheet
           $query[] = "sort=" . $sort;
         }
 
+        if($sort) {
+          $query[] = "max-results=" . $max;
+        }
+
         if(count($query)) {
           $url .= '?' . implode('&', $query);
         }
@@ -174,7 +178,7 @@ class Worksheet
 
     /**
      * Get the cell feed url
-     * 
+     *
      * @return stirng
      */
     public function getCellFeedUrl($minRow = null, $maxRow = null, $minCol = null, $maxCol = null)
@@ -199,3 +203,4 @@ class Worksheet
       return $url;
     }
 }
+
