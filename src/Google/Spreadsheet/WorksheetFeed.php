@@ -47,7 +47,11 @@ class WorksheetFeed extends ArrayIterator
         $worksheets = array();
         foreach ($this->xml->entry as $entry) {
             $worksheet = new Worksheet($entry);
-            $worksheet->setPostUrl($this->getPostUrl());
+            try {
+              $worksheet->setPostUrl($this->getPostUrl());
+            } catch(Exception $e) {
+
+            }
             $worksheets[] = $worksheet;
         }
         parent::__construct($worksheets);
