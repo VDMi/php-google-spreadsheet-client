@@ -106,7 +106,11 @@ class WorksheetFeed extends ArrayIterator
         if (substr($entry->id->__toString(), -strlen($id)) === $id
         || substr($entry->id->__toString(), -strlen($id . '/edit')) === $id . '/edit') {
           $worksheet = new Worksheet($entry);
-          $worksheet->setPostUrl($this->getPostUrl());
+          try {
+            $worksheet->setPostUrl($this->getPostUrl());
+          } catch(Exception $e) {
+
+          }
           return $worksheet;
         }
       }
